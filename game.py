@@ -26,18 +26,24 @@ class Player():
         self.symbole = symbole
         self.won_games = 0
         self.draw_games = 0
+    
+    def stat(self):
+        return str(self.name + "won " + self.won_games + " games, " + self.draw_games + " draw.")
+    
+    def __str__(self):
+        return self.name
 
 def alignement(grid):
-    if(    grid[0][0]==grid[0][1]==grid[0][2] and grid[0][0] != None #vertical
-        or grid[1][0]==grid[1][1]==grid[1][2] and grid[0][0] != None #vertical
-        or grid[2][0]==grid[2][1]==grid[2][2] and grid[0][0] != None #vertical
+    if(    grid[0][0]==grid[0][1]==grid[0][2] != None #vertical
+        or grid[1][0]==grid[1][1]==grid[1][2] != None #vertical
+        or grid[2][0]==grid[2][1]==grid[2][2] != None #vertical
 
-        or grid[0][0]==grid[1][0]==grid[2][0] and grid[0][0] != None #horizontal
-        or grid[0][1]==grid[1][1]==grid[2][1] and grid[0][0] != None #horizontal
-        or grid[0][2]==grid[1][2]==grid[2][2] and grid[0][0] != None #horizontal
+        or grid[0][0]==grid[1][0]==grid[2][0] != None #horizontal
+        or grid[0][1]==grid[1][1]==grid[2][1] != None #horizontal
+        or grid[0][2]==grid[1][2]==grid[2][2] != None #horizontal
 
-        or grid[0][0]==grid[1][1]==grid[2][2] and grid[0][0] != None #diagonal
-        or grid[0][1]==grid[1][2]==grid[3][1] and grid[0][0] != None #diagonal
+        or grid[0][0]==grid[1][1]==grid[2][2] != None #diagonal
+        or grid[1][1]==grid[0][2]==grid[2][0] != None #diagonal
     ): 
         return True
     else:
@@ -53,7 +59,7 @@ def gridFull(grid):
 def gameLoop(p1, p2):
 
     def getPlayerInput():
-        print("Enter next move : x y (0 < x y < 2)")
+        print("{} next move : x y (0 < x y < 2)".format(playerTurn))
         x = '-1'
         y = '-1'
         while((int(x) < 0 or int(x) > 2) or (int(y) < 0 or int(y) > 2)):
@@ -101,8 +107,13 @@ def gameLoop(p1, p2):
         # Display the grid
         print(grid)
 
-            
-    
+    if(alignement(grid.grid)):
+        playerTurn.won_games += 1
+        print("{} won!".format(playerTurn.name))
+    elif(gridFull(grid.grid)):
+        p1.draw_games += 1
+        p2.draw_games += 1
+        print("Grid full, draw!")
 
 
 if __name__ == "__main__":
@@ -110,5 +121,13 @@ if __name__ == "__main__":
     p1 = Player("vic", "X")
     p2 = Player("sme", "O")
 
-    # Start the game loop
-    gameLoop(p1, p2)
+    inpt = "y"
+    while(inpt != "n"):
+        # Start the game loop
+        gameLoop(p1, p2)
+
+        print(p1.stat())
+        print(p2.stat())
+
+        print("New game? y/n")
+        inpt = input() 
