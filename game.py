@@ -1,6 +1,7 @@
 import numpy as np
 import random
 import re
+import minimax as ai
 
 class Grid():
     def __init__(self):
@@ -21,33 +22,38 @@ class Grid():
         return grid
 
 class Player():
-    def __init__(self, name, symbole):
+    def __init__(self, name, symbole, isAI=False):
         self.name = name
         self.symbole = symbole
+        self.isAI = isAI
         self.won_games = 0
         self.draw_games = 0
     
     def stat(self):
-        return str(self.name + "won " + self.won_games + " games, " + self.draw_games + " draw.")
+        return self.name + " won " + str(self.won_games) + " games, " + str(self.draw_games) + " draw."
     
     def __str__(self):
         return self.name
 
 def alignement(grid):
-    if(    grid[0][0]==grid[0][1]==grid[0][2] != None #vertical
-        or grid[1][0]==grid[1][1]==grid[1][2] != None #vertical
-        or grid[2][0]==grid[2][1]==grid[2][2] != None #vertical
-
-        or grid[0][0]==grid[1][0]==grid[2][0] != None #horizontal
-        or grid[0][1]==grid[1][1]==grid[2][1] != None #horizontal
-        or grid[0][2]==grid[1][2]==grid[2][2] != None #horizontal
-
-        or grid[0][0]==grid[1][1]==grid[2][2] != None #diagonal
-        or grid[1][1]==grid[0][2]==grid[2][0] != None #diagonal
-    ): 
-        return True
+    if(grid[0][0] == grid[0][1] == grid[0][2] != None):  # vertical
+         return True, grid[0][0]
+    elif(grid[1][0] == grid[1][1] == grid[1][2] != None):  # vertical
+        return True, grid[1][0]
+    elif(grid[2][0] == grid[2][1] == grid[2][2] != None):  # vertical
+        return True, grid[2][0]
+    elif(grid[0][0] == grid[1][0] == grid[2][0] != None):  # horizontal
+        return True, grid[0][0]
+    elif(grid[0][1] == grid[1][1] == grid[2][1] != None):  # horizontal
+        return True, grid[0][1] 
+    elif(grid[0][2] == grid[1][2] == grid[2][2] != None):  # horizontal
+        return True, grid[0][2]  
+    elif(grid[0][0] == grid[1][1] == grid[2][2] != None):  # diagonal
+        return True, grid[0][0]
+    elif(grid[1][1] == grid[0][2] == grid[2][0] != None):  # diagonal
+        return True, grid[1][1]
     else:
-        return False
+        return False, None
 
 def gridFull(grid):
     for rows in grid:
@@ -55,6 +61,16 @@ def gridFull(grid):
             if cell == None:
                 return False
     return True
+
+
+def empty_cells(state):
+    cells = []
+
+    for x, row in enumerate(state):
+        for y, cell in enumerate(row):
+            if cell == 0:
+                cells.append([x, y])
+    return cells
 
 def gameLoop(p1, p2):
 
@@ -88,24 +104,53 @@ def gameLoop(p1, p2):
     # Display the grid
     print(grid)
 
-    # Player place its symbol
-    x, y = getPlayerInput()
-    while(not grid.update(x, y, playerTurn.symbole)):
-        x, y = getPlayerInput()
-    
-    print(grid)
-
-    while(not alignement(grid.grid) and not gridFull(grid.grid)):
-        # Switch player
-        playerTurn = switchPlayer(playerTurn)
-
-        # Get player input
+    # Check if player is AI
+    if(playerTurn.isAI):
+        depth = len(empty_cells(grid.grid))
+        if depth == 0:
+            return
+        if depth == 9:
+            x = random.randint(0, 2)
+            y = random.randint(0, 2)
+        else:
+            move = ai.nextMove(grid.grid, depth, playerTurn.symbole)
+            x, y = move[0], move[1]
+        grid.update(x, y, playerTurn.symbole)
+    else:
+        # Player place its symbol
         x, y = getPlayerInput()
         while(not grid.update(x, y, playerTurn.symbole)):
             x, y = getPlayerInput()
+    
+    print(grid)
+    aligned, _ = alignement(grid.grid)
+    while(not aligned and not gridFull(grid.grid)):
+        # Switch player
+        playerTurn = switchPlayer(playerTurn)
+
+        # Check if player is AI
+        if(playerTurn.isAI):
+            depth = len(empty_cells(grid.grid))
+            if depth == 0:
+                return
+            if depth == 9:
+                x = random.randint(0, 2)
+                y = random.randint(0, 2)
+            else:
+                move = ai.nextMove(grid.grid, depth, playerTurn.symbole)
+                x, y = move[0], move[1]
+            grid.update(x, y, playerTurn.symbole)
+        else:
+            # Get player input
+            x, y = getPlayerInput()
+            while(not grid.update(x, y, playerTurn.symbole)):
+                x, y = getPlayerInput()
 
         # Display the grid
         print(grid)
+
+        # Check if there's a winner
+        aligned, _ = alignement(grid.grid)
 
     if(alignement(grid.grid)):
         playerTurn.won_games += 1
@@ -118,8 +163,8 @@ def gameLoop(p1, p2):
 
 if __name__ == "__main__":
     # Create players
-    p1 = Player("vic", "X")
-    p2 = Player("sme", "O")
+    p1 = Player("vic", "X", isAI=False)
+    p2 = Player("AI", "O", isAI=True)
 
     inpt = "y"
     while(inpt != "n"):
