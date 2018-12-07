@@ -46,15 +46,19 @@ def nextMove(state, depth, player):
     if depth == 0 or align:
         if(winner == 'O'):
             score = +1
-        else:
+        elif(winner == 'X'):
             score = -1
+        else:
+            score = 0
         return [-1, -1, score]
 
     for cell in game.empty_cells(state):
         x, y = cell[0], cell[1]
         state[x][y] = player
-        score = nextMove(state, depth - 1, -player)
-        state[x][y] = 0
+        if(player == 'O'): player = 'X'
+        elif(player == 'X'): player = 'O'
+        score = nextMove(state, depth - 1, player)
+        state[x][y] = None
         score[0], score[1] = x, y
 
         if player == 'O':

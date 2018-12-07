@@ -15,10 +15,22 @@ class Grid():
             print("Cell already used!")
             return False
 
+    def isMoveAllowed(self, x, y):
+        if(self.grid[x][y] == None):
+            return True
+        else:
+            return False
+
     def __str__(self):
         grid = ""
-        for i, cell in enumerate(self.grid):
-            grid += " " + str(cell) + "\n"
+        for i, row in enumerate(self.grid):
+            grid += "|"
+            for j, cell in enumerate(row): 
+                if(cell == None):
+                    grid += " -"
+                else:
+                    grid += " " + self.grid[i][j]
+            grid += " |\n"
         return grid
 
 class Player():
@@ -66,10 +78,11 @@ def gridFull(grid):
 def empty_cells(state):
     cells = []
 
-    for x, row in enumerate(state):
-        for y, cell in enumerate(row):
-            if cell == 0:
+    for y, row in enumerate(state):
+        for x, cell in enumerate(row):
+            if cell == None:
                 cells.append([x, y])
+    #print(cells)
     return cells
 
 def gameLoop(p1, p2):
@@ -106,16 +119,17 @@ def gameLoop(p1, p2):
 
     # Check if player is AI
     if(playerTurn.isAI):
-        depth = len(empty_cells(grid.grid))
-        if depth == 0:
-            return
-        if depth == 9:
-            x = random.randint(0, 2)
-            y = random.randint(0, 2)
-        else:
-            move = ai.nextMove(grid.grid, depth, playerTurn.symbole)
-            x, y = move[0], move[1]
-        grid.update(x, y, playerTurn.symbole)
+            depth = len(empty_cells(grid.grid))
+            if depth == 0:
+                return
+            if depth == 9:
+                x = random.randint(0, 2)
+                y = random.randint(0, 2)
+            else:
+                move = ai.nextMove(grid.grid.copy(), depth, playerTurn.symbole)
+                x, y = move[0], move[1]
+            grid.update(x, y, playerTurn.symbole)
+            
     else:
         # Player place its symbol
         x, y = getPlayerInput()
@@ -137,7 +151,7 @@ def gameLoop(p1, p2):
                 x = random.randint(0, 2)
                 y = random.randint(0, 2)
             else:
-                move = ai.nextMove(grid.grid, depth, playerTurn.symbole)
+                move = ai.nextMove(grid.grid.copy(), depth, playerTurn.symbole)
                 x, y = move[0], move[1]
             grid.update(x, y, playerTurn.symbole)
         else:
