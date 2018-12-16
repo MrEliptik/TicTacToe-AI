@@ -78,8 +78,8 @@ def gridFull(grid):
 def empty_cells(state):
     cells = []
 
-    for y, row in enumerate(state):
-        for x, cell in enumerate(row):
+    for x, row in enumerate(state):
+        for y, cell in enumerate(row):
             if cell == None:
                 cells.append([x, y])
     #print(cells)
@@ -135,6 +135,7 @@ def gameLoop(p1, p2):
         x, y = getPlayerInput()
         while(not grid.update(x, y, playerTurn.symbole)):
             x, y = getPlayerInput()
+        print(empty_cells(grid.grid))
     
     print(grid)
     aligned, _ = alignement(grid.grid)
@@ -151,14 +152,16 @@ def gameLoop(p1, p2):
                 x = random.randint(0, 2)
                 y = random.randint(0, 2)
             else:
-                move = ai.nextMove(grid.grid.copy(), depth, playerTurn.symbole)
+                move = ai.nextMove(grid.grid, depth, playerTurn.symbole)
                 x, y = move[0], move[1]
             grid.update(x, y, playerTurn.symbole)
         else:
             # Get player input
             x, y = getPlayerInput()
+            
             while(not grid.update(x, y, playerTurn.symbole)):
                 x, y = getPlayerInput()
+            print(empty_cells(grid.grid))
 
         # Display the grid
         print(grid)
