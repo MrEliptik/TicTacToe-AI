@@ -45,9 +45,9 @@ def nextMove(state, depth, player):
     align, winner = game.alignement(state)
     if depth == 0 or align:
         if(winner == 'O'):
-            score = +1
+            score = +10 - (9-depth)
         elif(winner == 'X'):
-            score = -1
+            score = (9-depth) -10
         else:
             score = 0
         return [-1, -1, score]
@@ -61,6 +61,8 @@ def nextMove(state, depth, player):
         state[x][y] = None
         score[0], score[1] = x, y
 
+        # Problem when AI must choose cell to do draw
+        # No best score is chosen and so -1 -1 is returned
         if player == 'O':
             if score[2] > best[2]:
                 best = score  # max value

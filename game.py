@@ -48,17 +48,17 @@ class Player():
         return self.name
 
 def alignement(grid):
-    if(grid[0][0] == grid[0][1] == grid[0][2] != None):  # vertical
+    if(grid[0][0] == grid[0][1] == grid[0][2] != None):  # horizontal
          return True, grid[0][0]
-    elif(grid[1][0] == grid[1][1] == grid[1][2] != None):  # vertical
+    elif(grid[1][0] == grid[1][1] == grid[1][2] != None):  # horizontal
         return True, grid[1][0]
-    elif(grid[2][0] == grid[2][1] == grid[2][2] != None):  # vertical
+    elif(grid[2][0] == grid[2][1] == grid[2][2] != None):  # horizontal
         return True, grid[2][0]
-    elif(grid[0][0] == grid[1][0] == grid[2][0] != None):  # horizontal
+    elif(grid[0][0] == grid[1][0] == grid[2][0] != None):  # vertical
         return True, grid[0][0]
-    elif(grid[0][1] == grid[1][1] == grid[2][1] != None):  # horizontal
+    elif(grid[0][1] == grid[1][1] == grid[2][1] != None):  # vertical
         return True, grid[0][1] 
-    elif(grid[0][2] == grid[1][2] == grid[2][2] != None):  # horizontal
+    elif(grid[0][2] == grid[1][2] == grid[2][2] != None):  # vertical
         return True, grid[0][2]  
     elif(grid[0][0] == grid[1][1] == grid[2][2] != None):  # diagonal
         return True, grid[0][0]
@@ -169,7 +169,7 @@ def gameLoop(p1, p2):
         # Check if there's a winner
         aligned, _ = alignement(grid.grid)
 
-    if(alignement(grid.grid)):
+    if(aligned):
         playerTurn.won_games += 1
         print("{} won!".format(playerTurn.name))
     elif(gridFull(grid.grid)):
