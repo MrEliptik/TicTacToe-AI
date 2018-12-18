@@ -37,41 +37,39 @@ def nextMove(grid, symbole):
 '''
 
 def nextMove(state, depth, player):
-    if player == 'O':
-        best = [-1, -1, -infinity]
-    else:
-        best = [-1, -1, +infinity]
+    bestMove = None
+    for cell in game.empty_cells(state):
+        cell = player
+        move_score = minimax(state, depth, player)
+        cell = None
+        if(move_score > bestMove):
+            bestMove = cell
+    return bestMove
 
-    align, winner = game.alignement(state)
-    if depth == 0 or align:
-        if(winner == 'O'):
-            score = +10 - (9-depth)
-        elif(winner == 'X'):
-            score = (9-depth) -10
-        else:
-            score = 0
-        return [-1, -1, score]
+def minimax(state, depth, player):
+    val, winner = game.alignement(state)
+    score = 0
+    if(val):
+        if(winner == "O"):
+            score = +10
+        elif(winner == "X"):
+            score = -10
+    if(game.gridFull(state)):
+        score = 0
+    
+    if(player == "O"): player = "X"
+    elif(player == "X"): player = "O"
+
+    best = -1000
 
     for cell in game.empty_cells(state):
-        x, y = cell[0], cell[1]
-        state[x][y] = player
-        if(player == 'O'): player = 'X'
-        elif(player == 'X'): player = 'O'
-        score = nextMove(state, depth - 1, player)
-        state[x][y] = None
-        score[0], score[1] = x, y
-
-        # Problem when AI must choose cell to do draw
-        # No best score is chosen and so -1 -1 is returned
-        if player == 'O':
-            if score[2] > best[2]:
-                best = score  # max value
-        else:
-            if score[2] < best[2]:
-                best = score  # min value
+        cell = player
+        best = max(best, minimax(state, depth-1, player))
+        cell = None
 
     return best
 
+    
 def getOpponentSymbole(sym):
     if(sym == 'O'):
         return 'X'
