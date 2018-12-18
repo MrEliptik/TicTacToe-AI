@@ -36,42 +36,39 @@ def nextMove(grid, symbole):
         return score
 '''
 
-def nextMove(state, depth, player):
-    bestMove = None
-    for cell in game.empty_cells(state):
-        cell = player
-        move_score = minimax(state, depth, player)
-        cell = None
-        if(move_score > bestMove):
-            bestMove = cell
-    return bestMove
-
 def minimax(state, depth, player):
     val, winner = game.alignement(state)
-    score = 0
-    if(val):
-        if(winner == "O"):
-            score = +10
-        elif(winner == "X"):
-            score = -10
-    if(game.gridFull(state)):
-        score = 0
-    
-    if(player == "O"): player = "X"
-    elif(player == "X"): player = "O"
+    if depth == 0 or val:
+        if winner == "O":
+            return 10, state
+        elif winner == "X":
+            return -10, state
+        else:
+            return 0, state
+    if game.gridFull(state):
+        return 0, state
 
-    best = -1000
-
-    for cell in game.empty_cells(state):
-        cell = player
-        best = max(best, minimax(state, depth-1, player))
-        cell = None
-
-    return best
-
-    
-def getOpponentSymbole(sym):
-    if(sym == 'O'):
-        return 'X'
-    elif(sym == 'X'):
-        return 'O'
+    if player == "O":
+        best = -infinity
+        best_cell = None
+        games = game.empty_cells(state)
+        for cell in games:
+            state[cell[0]][cell[1]] = player
+            v, move = minimax(state, depth-1, "X")
+            state[cell[0]][cell[1]] = None
+            if v > best-1:
+                best_cell = cell
+                best = v
+        return best, best_cell
+    else:
+        best = +infinity
+        best_cell = None
+        games = game.empty_cells(state)
+        for cell in games:
+            state[cell[0]][cell[1]] = player
+            v, move = minimax(state, depth-1, "O")
+            state[cell[0]][cell[1]] = None
+            if v <= best:
+                best_cell = cell
+                best = v
+        return best, best_cell

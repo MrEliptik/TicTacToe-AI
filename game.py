@@ -126,7 +126,7 @@ def gameLoop(p1, p2):
                 x = random.randint(0, 2)
                 y = random.randint(0, 2)
             else:
-                move = ai.nextMove(grid.grid.copy(), depth, playerTurn.symbole)
+                _, move = ai.minimax(grid.grid, depth, playerTurn.symbole)
                 x, y = move[0], move[1]
             grid.update(x, y, playerTurn.symbole)
             
@@ -152,7 +152,7 @@ def gameLoop(p1, p2):
                 x = random.randint(0, 2)
                 y = random.randint(0, 2)
             else:
-                move = ai.nextMove(grid.grid, depth, playerTurn.symbole)
+                score, move = ai.minimax(grid.grid, depth, playerTurn.symbole)
                 x, y = move[0], move[1]
             grid.update(x, y, playerTurn.symbole)
         else:
