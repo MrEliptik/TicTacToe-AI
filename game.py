@@ -114,9 +114,6 @@ def gameLoop(screen, p1, p2):
         playerTurn = p1
     else:
         playerTurn = p2
-    
-    # Display the grid
-    print(grid)
 
     # Check if player is AI
     if(playerTurn.isAI):

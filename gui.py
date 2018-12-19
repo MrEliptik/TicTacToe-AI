@@ -102,8 +102,8 @@ def ask(screen, question, line=2):
     center_yes_y = height/4
     center_no_x = (width/4)*2
     center_no_y = (height/4)*2
-    pygame.draw.rect(screen, BLACK, pygame.Rect((center_yes_x-20, center_yes_y-20), (150, 150)))
-    pygame.draw.rect(screen, BLACK, pygame.Rect((center_no_x-20, center_no_y-20), (150, 150)))
+    #pygame.draw.rect(screen, BLACK, pygame.Rect((center_yes_x-20, center_yes_y-20), (150, 150)))
+    #pygame.draw.rect(screen, BLACK, pygame.Rect((center_no_x-20, center_no_y-20), (150, 150)))
     while 1:
         for event in pygame.event.get():
             # handle MOUSEBUTTONUP
