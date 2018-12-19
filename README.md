@@ -7,6 +7,6 @@ A tic tac toe game with a minimax AI implementation
 Simply type *python game.py* in a terminal and you're good to go!
 
 # Dependencies 
-- Pygame
-- Numpy
+- pygame==1.9.4
+- numpy==1.15.4
 
