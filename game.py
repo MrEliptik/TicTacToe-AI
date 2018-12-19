@@ -2,6 +2,7 @@ import numpy as np
 import random
 import re
 import minimax as ai
+import gui
 
 class Grid():
     def __init__(self):
@@ -85,7 +86,7 @@ def empty_cells(state):
     #print(cells)
     return cells
 
-def gameLoop(p1, p2):
+def gameLoop(screen, p1, p2):
 
     def getPlayerInput():
         print("{} next move : x y (0 < x y < 2)".format(playerTurn))
@@ -113,9 +114,6 @@ def gameLoop(p1, p2):
         playerTurn = p1
     else:
         playerTurn = p2
-    
-    # Display the grid
-    print(grid)
 
     # Check if player is AI
     if(playerTurn.isAI):
@@ -129,15 +127,14 @@ def gameLoop(p1, p2):
                 _, move = ai.minimax(grid.grid, depth, playerTurn.symbole)
                 x, y = move[0], move[1]
             grid.update(x, y, playerTurn.symbole)
+            gui.drawSymbole(screen, (x, y), playerTurn.symbole)
             
     else:
         # Player place its symbol
-        x, y = getPlayerInput()
-        while(not grid.update(x, y, playerTurn.symbole)):
-            x, y = getPlayerInput()
-        print(empty_cells(grid.grid))
+        x, y = gui.input(screen)
+        grid.update(x, y, playerTurn.symbole)
+        gui.drawSymbole(screen, (x, y), playerTurn.symbole)
     
-    print(grid)
     aligned, _ = alignement(grid.grid)
     while(not aligned and not gridFull(grid.grid)):
         # Switch player
@@ -155,41 +152,44 @@ def gameLoop(p1, p2):
                 score, move = ai.minimax(grid.grid, depth, playerTurn.symbole)
                 x, y = move[0], move[1]
             grid.update(x, y, playerTurn.symbole)
+            gui.drawSymbole(screen, (x,y), playerTurn.symbole)
         else:
             # Get player input
-            x, y = getPlayerInput()
-            
-            while(not grid.update(x, y, playerTurn.symbole)):
-                x, y = getPlayerInput()
-            print(empty_cells(grid.grid))
-
-        # Display the grid
-        print(grid)
+            x, y = gui.input(screen)
+            grid.update(x, y, playerTurn.symbole)
+            gui.drawSymbole(screen, (x, y), playerTurn.symbole)
 
         # Check if there's a winner
         aligned, _ = alignement(grid.grid)
 
     if(aligned):
         playerTurn.won_games += 1
-        print("{} won!".format(playerTurn.name))
+        return playerTurn
+        
     elif(gridFull(grid.grid)):
         p1.draw_games += 1
         p2.draw_games += 1
-        print("Grid full, draw!")
-
+        return 0
 
 if __name__ == "__main__":
-    # Create players
-    p1 = Player("vic", "X", isAI=False)
-    p2 = Player("AI", "O", isAI=True)
-
     inpt = "y"
-    while(inpt != "n"):
-        # Start the game loop
-        gameLoop(p1, p2)
+    p1 = Player("vic", "X")
+    p2 = Player("AI", "O", isAI=True)
+    screen = gui.init()
 
+    while(inpt != "n"):    
+        
+        # Start the game loop
+        winner = gameLoop(screen, p1, p2)
+
+        if(winner != 0):
+            gui.writeScreen(screen, winner.name + " won!")          
+        else:           
+            gui.writeScreen(screen, "Draw!", line=1)
+            
+        gui.writeScreen(screen, "Click to", line=2)
+        gui.ask(screen, " play again!", line=3)
+        gui.clearScreen(screen)
         print(p1.stat())
         print(p2.stat())
-
-        print("New game? y/n")
-        inpt = input() 
+        
