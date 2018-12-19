@@ -87,18 +87,6 @@ def empty_cells(state):
 
 def gameLoop(screen, p1, p2):
 
-    def getPlayerInput():
-        print("{} next move : x y (0 < x y < 2)".format(playerTurn))
-        x = '-1'
-        y = '-1'
-        while((int(x) < 0 or int(x) > 2) or (int(y) < 0 or int(y) > 2)):
-            location = input()
-            x, y = re.split(' ', location)
-            if(int(x) >= 0 and int(x) < 3 and int(y) >= 0 and int(y) < 3):
-                return int(x), int(y)
-            else:
-                print("Location not valid!\n Must be : x y with 0 < x y < 2")
-
     def switchPlayer(turn):
         if(turn == p1):
             return p2
