@@ -117,8 +117,12 @@ def gameLoop(screen, p1, p2):
             gui.drawSymbole(screen, (x, y), playerTurn.symbole)
 
     else:
-        # Player place its symbol
+        # Get player input
         x, y = gui.input(screen)
+        # Check if the cell is not already used
+        while not grid.isMoveAllowed(x, y):
+            x, y = gui.input(screen)
+        grid.update(x, y, playerTurn.symbole)
         gui.drawSymbole(screen, (x, y), playerTurn.symbole)
 
     aligned, _ = alignement(grid.grid)
@@ -142,10 +146,10 @@ def gameLoop(screen, p1, p2):
         else:
             # Get player input
             x, y = gui.input(screen)
-            grid.update(x, y, playerTurn.symbole)
             # Check if the cell is not already used
-            while not grid.update(x, y, playerTurn.symbole):
+            while not grid.isMoveAllowed(x, y):
                 x, y = gui.input(screen)
+            grid.update(x, y, playerTurn.symbole)
             gui.drawSymbole(screen, (x, y), playerTurn.symbole)
 
         # Check if there's a winner

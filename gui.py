@@ -88,7 +88,6 @@ def input(screen):
             if event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
                 cell = getCell(pos)
-                drawSymbole(screen, cell, "X")
                 return cell[0], cell[1]
             if event.type == pygame.QUIT:
                 running = False
@@ -109,10 +108,7 @@ def ask(screen, question, line=2):
         for event in pygame.event.get():
             # handle MOUSEBUTTONUP
             if event.type == pygame.MOUSEBUTTONUP:
-                pos = pygame.mouse.get_pos()
-                cell = getCell(pos)
-                drawSymbole(screen, cell, "X")
-                return cell[0], cell[1]
+                return
             if event.type == pygame.QUIT:
                 running = False
             refresh()
