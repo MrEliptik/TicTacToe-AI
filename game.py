@@ -25,7 +25,7 @@ class Grid():
         grid = ""
         for i, row in enumerate(self.grid):
             grid += "|"
-            for j, cell in enumerate(row): 
+            for j, cell in enumerate(row):
                 if(cell == None):
                     grid += " -"
                 else:
@@ -40,10 +40,10 @@ class Player():
         self.isAI = isAI
         self.won_games = 0
         self.draw_games = 0
-    
+
     def stat(self):
         return self.name + " won " + str(self.won_games) + " games, " + str(self.draw_games) + " draw."
-    
+
     def __str__(self):
         return self.name
 
@@ -57,9 +57,9 @@ def alignement(grid):
     elif(grid[0][0] == grid[1][0] == grid[2][0] != None):  # vertical
         return True, grid[0][0]
     elif(grid[0][1] == grid[1][1] == grid[2][1] != None):  # vertical
-        return True, grid[0][1] 
+        return True, grid[0][1]
     elif(grid[0][2] == grid[1][2] == grid[2][2] != None):  # vertical
-        return True, grid[0][2]  
+        return True, grid[0][2]
     elif(grid[0][0] == grid[1][1] == grid[2][2] != None):  # diagonal
         return True, grid[0][0]
     elif(grid[1][1] == grid[0][2] == grid[2][0] != None):  # diagonal
@@ -115,13 +115,12 @@ def gameLoop(screen, p1, p2):
                 x, y = move[0], move[1]
             grid.update(x, y, playerTurn.symbole)
             gui.drawSymbole(screen, (x, y), playerTurn.symbole)
-            
+
     else:
         # Player place its symbol
         x, y = gui.input(screen)
-        grid.update(x, y, playerTurn.symbole)
         gui.drawSymbole(screen, (x, y), playerTurn.symbole)
-    
+
     aligned, _ = alignement(grid.grid)
     while(not aligned and not gridFull(grid.grid)):
         # Switch player
@@ -144,6 +143,9 @@ def gameLoop(screen, p1, p2):
             # Get player input
             x, y = gui.input(screen)
             grid.update(x, y, playerTurn.symbole)
+            # Check if the cell is not already used
+            while not grid.update(x, y, playerTurn.symbole):
+                x, y = gui.input(screen)
             gui.drawSymbole(screen, (x, y), playerTurn.symbole)
 
         # Check if there's a winner
@@ -152,7 +154,7 @@ def gameLoop(screen, p1, p2):
     if(aligned):
         playerTurn.won_games += 1
         return playerTurn
-        
+
     elif(gridFull(grid.grid)):
         p1.draw_games += 1
         p2.draw_games += 1
@@ -164,19 +166,18 @@ if __name__ == "__main__":
     p2 = Player("AI", "O", isAI=True)
     screen = gui.init()
 
-    while(inpt != "n"):    
-        
+    while(inpt != "n"):
+
         # Start the game loop
         winner = gameLoop(screen, p1, p2)
 
         if(winner != 0):
-            gui.writeScreen(screen, winner.name + " won!")          
-        else:           
+            gui.writeScreen(screen, winner.name + " won!")
+        else:
             gui.writeScreen(screen, "Draw!", line=1)
-            
+
         gui.writeScreen(screen, "Click to", line=2)
         gui.ask(screen, " play again!", line=3)
         gui.clearScreen(screen)
         print(p1.stat())
         print(p2.stat())
-        
