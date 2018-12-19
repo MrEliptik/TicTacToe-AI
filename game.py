@@ -167,13 +167,12 @@ def gameLoop(screen, p1, p2):
 
     if(aligned):
         playerTurn.won_games += 1
-        print("{} won!".format(playerTurn.name))
-        gui.writeScreen(screen, "{} won!".format(playerTurn.name))
+        return playerTurn
+        
     elif(gridFull(grid.grid)):
         p1.draw_games += 1
         p2.draw_games += 1
-        print("Grid full, draw!")
-        gui.writeScreen(screen, "Draw!")
+        return 0
 
 if __name__ == "__main__":
     inpt = "y"
@@ -184,12 +183,15 @@ if __name__ == "__main__":
     while(inpt != "n"):    
         
         # Start the game loop
-        gameLoop(screen, p1, p2)
+        winner = gameLoop(screen, p1, p2)
 
+        if(winner != 0):
+            gui.writeScreen(screen, winner.name + " won!")          
+        else:           
+            gui.writeScreen(screen, "Draw!", line=1)
+            
+        gui.ask(screen, "Play again?", line=2)
+        gui.clearScreen(screen)
         print(p1.stat())
         print(p2.stat())
-
-
-        gui.ask(screen, "Play again?")
-        inpt = input() 
-        gui.clearScreen(screen)
+        

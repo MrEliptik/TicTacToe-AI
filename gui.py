@@ -9,6 +9,7 @@ BLACK = 0, 0, 0
 size = width, height = 480, 480
 cell_width = (width/3)
 cell_height = (height/3)
+font_size = 60
 
 def init():
     pygame.init()
@@ -93,15 +94,16 @@ def input(screen):
                 sys.exit()
             refresh()
 
-def ask(screen, question):
+def ask(screen, question, line=2):
     "ask(screen, question) -> answer"
     pygame.font.init()
-    writeScreen(screen, question)
+    writeScreen(screen, question, line=line)
     center_yes_x = width/4
     center_yes_y = height/4
     center_no_x = (width/4)*2
     center_no_y = (height/4)*2
-    pygame.draw.rect(screen, BLACK, pygame.Rect((center_yes_x-20, center_yes_y-20), (50, 50)))
+    pygame.draw.rect(screen, BLACK, pygame.Rect((center_yes_x-20, center_yes_y-20), (150, 150)))
+    pygame.draw.rect(screen, BLACK, pygame.Rect((center_no_x-20, center_no_y-20), (150, 150)))
     while 1:
         for event in pygame.event.get():
             # handle MOUSEBUTTONUP
@@ -115,13 +117,13 @@ def ask(screen, question):
                 sys.exit()
             refresh()
 
-def writeScreen(screen, txt):
+def writeScreen(screen, txt, line=1):
     # initialize font; must be called after 'pygame.init()' to avoid 'Font not Initialized' error
-    myfont = pygame.font.SysFont("monospace", 50)
+    myfont = pygame.font.SysFont("monospace", font_size)
 
     # render text
     label = myfont.render(txt, 50, (0,255,0))
-    screen.blit(label, (width/2, height/2))
+    screen.blit(label, ((width/2)-(font_size/3)*len(txt), (height/4)*line))
     refresh()
 
 def refresh():
