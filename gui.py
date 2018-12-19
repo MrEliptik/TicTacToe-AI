@@ -81,7 +81,8 @@ def drawSymbole(screen, cell, symbole):
     refresh()
 
 def input(screen):
-    while 1:
+    running = True
+    while running == True:
         for event in pygame.event.get():
             # handle MOUSEBUTTONUP
             if event.type == pygame.MOUSEBUTTONUP:
@@ -90,21 +91,21 @@ def input(screen):
                 drawSymbole(screen, cell, "X")
                 return cell[0], cell[1]
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                running = False
             refresh()
+    pygame.quit()  # quits pygame
+    sys.exit()
 
 def ask(screen, question, line=2):
+    running = True
     "ask(screen, question) -> answer"
     pygame.font.init()
     writeScreen(screen, question, line=line)
     center_yes_x = width/4
     center_yes_y = height/4
     center_no_x = (width/4)*2
-    center_no_y = (height/4)*2
-    #pygame.draw.rect(screen, BLACK, pygame.Rect((center_yes_x-20, center_yes_y-20), (150, 150)))
-    #pygame.draw.rect(screen, BLACK, pygame.Rect((center_no_x-20, center_no_y-20), (150, 150)))
-    while 1:
+    center_no_y = (height/4)
+    while running == True:
         for event in pygame.event.get():
             # handle MOUSEBUTTONUP
             if event.type == pygame.MOUSEBUTTONUP:
@@ -113,16 +114,17 @@ def ask(screen, question, line=2):
                 drawSymbole(screen, cell, "X")
                 return cell[0], cell[1]
             if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+                running = False
             refresh()
+    pygame.quit()
+    sys.exit()
 
 def writeScreen(screen, txt, line=1):
     # initialize font; must be called after 'pygame.init()' to avoid 'Font not Initialized' error
     myfont = pygame.font.SysFont("monospace", font_size)
 
     # render text
-    label = myfont.render(txt, 50, (0,255,0))
+    label = myfont.render(txt, 50, (0,200,0))
     screen.blit(label, ((width/2)-(font_size/3)*len(txt), (height/4)*line))
     refresh()
 

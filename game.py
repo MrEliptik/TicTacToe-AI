@@ -187,7 +187,8 @@ if __name__ == "__main__":
         else:           
             gui.writeScreen(screen, "Draw!", line=1)
             
-        gui.ask(screen, "Play again?", line=2)
+        gui.writeScreen(screen, "Click to", line=2)
+        gui.ask(screen, " play again!", line=3)
         gui.clearScreen(screen)
         print(p1.stat())
         print(p2.stat())
