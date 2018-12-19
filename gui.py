@@ -1,9 +1,14 @@
 import sys
 import pygame
+from math import sqrt as sqrt
+
+import time
 
 WHITE = 255, 255, 255
 BLACK = 0, 0, 0
 size = width, height = 480, 480
+cell_width = (width/3)
+cell_height = (height/3)
 
 def init():
     pygame.init()
@@ -18,6 +23,19 @@ def init():
         pygame.draw.line(screen, BLACK, [(width/3)*i, 0], [((width/3)*i), height], 3)
     
     return screen
+
+def clearScreen(screen):
+    screen.fill(WHITE)
+
+    # Horizontal lines
+    for i in range(1, 3):
+        pygame.draw.line(
+            screen, BLACK, [0, (height/3)*i], [width, ((height/3)*i)], 3)
+    # Vertical lines
+    for i in range(1, 3):
+        pygame.draw.line(
+            screen, BLACK, [(width/3)*i, 0], [((width/3)*i), height], 3)
+
 
 def getCell(pos):
     if(pos[0] >= 0 and pos[0] < width/3 and pos[1] >= 0 and pos[1] < height/3):
@@ -39,26 +57,74 @@ def getCell(pos):
     if(pos[0] >= (width/3)*2 and pos[0] < width and pos[1] >= (height/3)*2 and pos[1] < height):
         return (2, 2)
 
-def drawSymbole(screen, cell, symbole):
+def drawSymbole(screen, cell, symbole):  
     if(symbole == "X"):
-        pass
-    elif(symbole == "O"):
-        pygame.draw.circle(screen, BLACK, (int(cell[0]/2), int(cell[1]/2)), int((width/3)*0.9), 1)
+        x00 = int(((width/3)*cell[1]))
+        y00 = int(((height/3)*cell[0]))
+        x01 = int(((width/3)*cell[1]) + cell_width)
+        y01 = int(((height/3)*cell[0]) + cell_height)
 
-def gameLoop(screen):
+        x10 = int(((width/3)*cell[1]) + cell_width)
+        y10 = int(((height/3)*cell[0]))
+        x11 = int(((width/3)*cell[1]))
+        y11 = int(((height/3)*cell[0]) + cell_height)
+        pygame.draw.line(screen, BLACK, (x00, y00), (x01, y01), 1)
+        pygame.draw.line(screen, BLACK, (x10, y10), (x11, y11), 1)
+    elif(symbole == "O"):
+        # Cell[1] for x because it doesn't change on
+        # the line
+        x = int(((width/3)*cell[1]) + cell_width/2)
+        y = int(((height/3)*cell[0]) + cell_height/2)
+        pygame.draw.circle(screen, BLACK, (x, y), int((width/3/2)*0.9), 1)
+    
+    refresh()
+
+def input(screen):
     while 1:
         for event in pygame.event.get():
             # handle MOUSEBUTTONUP
             if event.type == pygame.MOUSEBUTTONUP:
                 pos = pygame.mouse.get_pos()
                 cell = getCell(pos)
-                #drawSymbole(screen, cell, "O")
-
+                drawSymbole(screen, cell, "X")
+                return cell[0], cell[1]
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            pygame.display.update()
+            refresh()
 
-if __name__ == "__main__":
-    screen = init()
-    gameLoop(screen)
+def ask(screen, question):
+    "ask(screen, question) -> answer"
+    pygame.font.init()
+    writeScreen(screen, question)
+    center_yes_x = width/4
+    center_yes_y = height/4
+    center_no_x = (width/4)*2
+    center_no_y = (height/4)*2
+    pygame.draw.rect(screen, BLACK, pygame.Rect((center_yes_x-20, center_yes_y-20), (50, 50)))
+    while 1:
+        for event in pygame.event.get():
+            # handle MOUSEBUTTONUP
+            if event.type == pygame.MOUSEBUTTONUP:
+                pos = pygame.mouse.get_pos()
+                cell = getCell(pos)
+                drawSymbole(screen, cell, "X")
+                return cell[0], cell[1]
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            refresh()
+
+def writeScreen(screen, txt):
+    # initialize font; must be called after 'pygame.init()' to avoid 'Font not Initialized' error
+    myfont = pygame.font.SysFont("monospace", 50)
+
+    # render text
+    label = myfont.render(txt, 50, (0,255,0))
+    screen.blit(label, (width/2, height/2))
+    refresh()
+
+def refresh():
+    pygame.display.update()
+
+
