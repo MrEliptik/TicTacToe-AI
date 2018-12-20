@@ -1,5 +1,5 @@
 # TicTacToe-AI
-A tic tac toe game with a minimax AI implementation
+A tic tac toe game with a minmax AI implementation
 
 ![alt text](https://raw.githubusercontent.com/MrEliptik/TicTacToe-AI/master/images/play.gif)
 
