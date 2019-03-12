@@ -126,3 +126,4 @@ def writeScreen(screen, txt, line=1):
 
 def refresh():
     pygame.display.update()
+    

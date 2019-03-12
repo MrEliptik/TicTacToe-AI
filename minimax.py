@@ -36,3 +36,4 @@ def minimax(state, depth, player):
             best_cell = cell
             best = v
     return best, best_cell
+    
