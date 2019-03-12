@@ -80,9 +80,9 @@ def drawSymbole(screen, cell, symbole):
     
     refresh()
 
-def input(screen):
+def playerInput(screen):
     running = True
-    while running == True:
+    while running:
         for event in pygame.event.get():
             # handle MOUSEBUTTONUP
             if event.type == pygame.MOUSEBUTTONUP:
@@ -97,14 +97,14 @@ def input(screen):
 
 def ask(screen, question, line=2):
     running = True
-    "ask(screen, question) -> answer"
+    # "ask(screen, question) -> answer"
     pygame.font.init()
     writeScreen(screen, question, line=line)
     center_yes_x = width/4
     center_yes_y = height/4
     center_no_x = (width/4)*2
     center_no_y = (height/4)
-    while running == True:
+    while running:
         for event in pygame.event.get():
             # handle MOUSEBUTTONUP
             if event.type == pygame.MOUSEBUTTONUP:
@@ -126,5 +126,3 @@ def writeScreen(screen, txt, line=1):
 
 def refresh():
     pygame.display.update()
-
-

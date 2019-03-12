@@ -8,25 +8,21 @@ class Grid():
         self.grid = np.full((3,3), None)
 
     def update(self, x, y, symbol):
-        if(self.grid[x][y] == None):
+        if(self.grid[x][y] is None):
             self.grid[x][y] = symbol
             return True
-        else:
-            print("Cell already used!")
-            return False
+        print("Cell already used!")
+        return False
 
     def isMoveAllowed(self, x, y):
-        if(self.grid[x][y] == None):
-            return True
-        else:
-            return False
+        return self.grid[x][y] is None):
 
     def __str__(self):
         grid = ""
         for i, row in enumerate(self.grid):
             grid += "|"
             for j, cell in enumerate(row):
-                if(cell == None):
+                if(cell is None):
                     grid += " -"
                 else:
                     grid += " " + self.grid[i][j]
@@ -49,7 +45,7 @@ class Player():
 
 def alignement(grid):
     if(grid[0][0] == grid[0][1] == grid[0][2] != None):  # horizontal
-         return True, grid[0][0]
+        return True, grid[0][0]
     elif(grid[1][0] == grid[1][1] == grid[1][2] != None):  # horizontal
         return True, grid[1][0]
     elif(grid[2][0] == grid[2][1] == grid[2][2] != None):  # horizontal
@@ -70,7 +66,7 @@ def alignement(grid):
 def gridFull(grid):
     for rows in grid:
         for cell in rows:
-            if cell == None:
+            if cell is None:
                 return False
     return True
 
@@ -80,7 +76,7 @@ def empty_cells(state):
 
     for x, row in enumerate(state):
         for y, cell in enumerate(row):
-            if cell == None:
+            if cell is None:
                 cells.append([x, y])
     #print(cells)
     return cells
@@ -90,8 +86,7 @@ def gameLoop(screen, p1, p2):
     def switchPlayer(turn):
         if(turn == p1):
             return p2
-        else:
-            return p1
+        return p1
 
     # Initiliaze the Grid
     grid = Grid()
@@ -118,10 +113,10 @@ def gameLoop(screen, p1, p2):
 
     else:
         # Get player input
-        x, y = gui.input(screen)
+        x, y = gui.playerInput(screen)
         # Check if the cell is not already used
         while not grid.isMoveAllowed(x, y):
-            x, y = gui.input(screen)
+            x, y = gui.playerInput(screen)
         grid.update(x, y, playerTurn.symbole)
         gui.drawSymbole(screen, (x, y), playerTurn.symbole)
 
@@ -145,10 +140,10 @@ def gameLoop(screen, p1, p2):
             gui.drawSymbole(screen, (x,y), playerTurn.symbole)
         else:
             # Get player input
-            x, y = gui.input(screen)
+            x, y = gui.playerInput(screen)
             # Check if the cell is not already used
             while not grid.isMoveAllowed(x, y):
-                x, y = gui.input(screen)
+                x, y = gui.playerInput(screen)
             grid.update(x, y, playerTurn.symbole)
             gui.drawSymbole(screen, (x, y), playerTurn.symbole)
 
